@@ -1,0 +1,14 @@
+venv/
+
+# file di cache di python rigenerati ogni volta che compila?
+__pycache__/
+*.py[cod]
+
+# per le key
+.env
+
+# file che potrebbe produrre linux anche se impobabile varia da OS a OS
+.DS_Store
+Thumbs.db
+*.swp
+*~
