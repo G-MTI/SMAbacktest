@@ -1,11 +1,8 @@
+
 import pandas as pd
 import yfinance as yf
 
-def get_stock_data(ticker, start_date, end_date):
-    data = yf.download(ticker, start=start_date, end=end_date)
+def get_stock_data(tickers_input, start_input, end_input):
+    data = yf.download(tickers=tickers_input, start=start_input, end=end_input)
     return data
-
-def calculate_sma(data, window):
-    sma = data['Close'].rolling(window=window).mean()
-    return sma
 

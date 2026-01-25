@@ -1,13 +1,15 @@
+
+# ignora la cartella venv che sarebbe il virtual enviroment in cui ho installato le librerie
 venv/
 
 # file di cache di python rigenerati ogni volta che compila?
 __pycache__/
 *.py[cod]
 
-# per le key
+# per le key delle API, se uaso solo yfinance non mi serve che mi sa che non ci sono limiti per le richieste
 .env
 
-# file che potrebbe produrre linux anche se impobabile varia da OS a OS
+# file che potrebbe produrre linux anche se improbabile varia da OS a OS
 .DS_Store
 Thumbs.db
 *.swp
