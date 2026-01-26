@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from function import get_stock_data, sma_calculate
+from function import get_stock_data, sma_calculate, cross_over
 
 st.title("SMA Backtest Application")
 
@@ -21,3 +21,7 @@ print(data)
 sma_data = sma_calculate(data, slow_input, fast_input)
 pd.set_option('display.max_rows', None)
 print(sma_data)
+
+data_fn = cross_over(sma_data, start_input, fast_input)
+print(data_fn)
+
