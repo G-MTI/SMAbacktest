@@ -25,7 +25,9 @@ print(sma_data)
 data_signal = signal(sma_data, start_input, fast_input)
 print(data_signal)
 
-data_fn = cross_over(data_signal)
+data_fn, returns = cross_over(data_signal)
 print(data_fn)
+print(returns)
+
 
 

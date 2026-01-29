@@ -21,7 +21,6 @@ def signal(sma_data, start_input, fast_input):
     data_signal = sma_data.copy().loc[start_input:] #loc "filtra" i dati, in questo caso parte dalla data start_input
     data_signal['signal'] = (data_signal['smaFast'] > data_signal['smaSlow']).astype(int).diff() #calocolo la differenza con .diff() tra il signal di un giorno e quelo del giorno precedente così capisco quando ci sono i crossover
                 # se facessi senza .diff() avrei solo un valore = e ! perche .astype(int) mi converte i valori booleani in interi
-                #calcolo giornalmente l'aumento percentuale del prezzo di chiusura ['Close'] rispetto al giorno precedente: .pct_change() = Fractional change between the current and a prior element. //documentazione su https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.pct_change.html
                 # moltiplico per il signal shiftato di 1 giorno perche l'operazione avviene il giorno dopo il segnale 1 o -1, (i segnali avvengono alla chiusura del mercato)
                 # 0 = no position, 1 = long position, -1 = short position
     data_signal['entry'] = 0.0
@@ -29,20 +28,26 @@ def signal(sma_data, start_input, fast_input):
     return data_signal
 
 def cross_over(data_signal):
-    data_fn = data_signal[data_signal.index != 'Ticker']
+    prices=[]
+    data_fn = data_signal.copy()
+
     for i in range(1, len(data_fn)):
         if data_fn['signal'].iloc[i] == 1:
-            price = data_fn['Close'].iloc[i+1]
+            price = data_fn['Close'].iloc[i+1] * data_fn['signal'].iloc[i]
             data_fn.at[data_fn.index[i], 'entry'] = price
-            print(f"Long entry at {data_fn.index[i]} price {price}")
+            prices.append(price)
         elif data_fn['signal'].iloc[i] == -1:
-            price = data_fn['Close'].iloc[i+1]
+            price = data_fn['Close'].iloc[i+1] * data_fn['signal'].iloc[i]
             data_fn.at[data_fn.index[i], 'exit'] = price
-            print(f"Long exit at {data_fn.index[i]} price {price}")
+            prices.append(price)
+    return data_fn, prices
 
-    return data_fn
+def returns(data_fn, prices):
+    returns = []
+    for i in range (1, len(prices)):
+        if prices[i] << 0:
 
-def returns(data_fn):
-    data_fn['returns'] = data_fn['Close'].pct_change() * data_fn['signal'].shift(1)
-    data_fn['cumulative_returns'] = (1 + data_fn['returns']).cumprod() - 1
-    return data_fn
+            returns.append((-prices[i] + prices[i+1]) * 100 / prices[i])
+
+    return data_fn, returns 
+
