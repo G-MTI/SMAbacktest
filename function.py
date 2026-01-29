@@ -40,14 +40,14 @@ def cross_over(data_signal):
             price = data_fn['Close'].iloc[i+1] * data_fn['signal'].iloc[i]
             data_fn.at[data_fn.index[i], 'exit'] = price
             prices.append(price)
+    if prices[-1] > 0:
+        prices.pop()
+    if prices[0] < 0:
+        prices.pop(0)
     return data_fn, prices
 
-def returns(data_fn, prices):
+def returns_calculate(data_fn, prices):
     returns = []
-    for i in range (1, len(prices)):
-        if prices[i] << 0:
-
-            returns.append((-prices[i] + prices[i+1]) * 100 / prices[i])
-
+    for i in range (0, len(prices)-1):
+        returns.append((((prices[i] - prices[i+1]) / prices[i])-2) * 100)
     return data_fn, returns 
-

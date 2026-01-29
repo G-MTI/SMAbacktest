@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from function import get_stock_data, sma_calculate, signal, cross_over
+from function import get_stock_data, sma_calculate, signal, cross_over, returns_calculate
 
 st.title("SMA Backtest Application")
 
@@ -18,16 +18,27 @@ data = get_stock_data(ticker_input, start_sma, end_input)
 print("Dati scaricati:", len(data))
 print(data)
 
-sma_data = sma_calculate(data, slow_input, fast_input)
-pd.set_option('display.max_rows', None)
-print(sma_data)
+if st.button("Esegui Backtest"):
+    sma_data = sma_calculate(data, slow_input, fast_input)
+    pd.set_option('display.max_rows', None)
+    print(sma_data)
 
-data_signal = signal(sma_data, start_input, fast_input)
-print(data_signal)
-
-data_fn, returns = cross_over(data_signal)
-print(data_fn)
-print(returns)
+    data_signal = signal(sma_data, start_input, fast_input)
+    print(data_signal)
 
 
+    data_fn, prices = cross_over(data_signal)
+    print(data_fn)
+    print("Prices:", prices)
 
+    returns = returns_calculate(data_fn, prices)
+    print("returns:", returns)
+
+    #Grafico con Plotly
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['Close'], name='Close'))
+    fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaFast'], name=f'SMA {fast_input}'))
+    fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaSlow'], name=f'SMA {slow_input}'))
+
+    st.plotly_chart(fig)
