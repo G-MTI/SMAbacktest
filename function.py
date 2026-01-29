@@ -1,6 +1,7 @@
 
 import pandas as pd
 import yfinance as yf
+import numpy as np
 
 #start_date=start_input-200
 #end_date=end_input
@@ -49,5 +50,9 @@ def cross_over(data_signal):
 def returns_calculate(data_fn, prices):
     returns = []
     for i in range (0, len(prices)-1):
-        returns.append((((prices[i] - prices[i+1]) / prices[i])-2) * 100)
+        returns.append(((prices[i] - prices[i+1]) / prices[i])-2)
     return data_fn, returns 
+
+def cumulative_results(returns):
+    cumulative = returns[0]
+    return cumulative

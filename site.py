@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from function import get_stock_data, sma_calculate, signal, cross_over, returns_calculate
+from function import get_stock_data, sma_calculate, signal, cross_over, returns_calculate, cumulative_results
 
 st.title("SMA Backtest Application")
 
@@ -24,15 +24,15 @@ if st.button("Esegui Backtest"):
     print(sma_data)
 
     data_signal = signal(sma_data, start_input, fast_input)
-    print(data_signal)
 
 
     data_fn, prices = cross_over(data_signal)
-    print(data_fn)
     print("Prices:", prices)
 
     returns = returns_calculate(data_fn, prices)
     print("returns:", returns)
+
+    cumulative = cumulative_results(returns)
 
     #Grafico con Plotly
     fig = go.Figure()
@@ -41,4 +41,15 @@ if st.button("Esegui Backtest"):
     fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaFast'], name=f'SMA {fast_input}'))
     fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaSlow'], name=f'SMA {slow_input}'))
 
+    buy_signals = data_fn[data_fn['signal'] == 1]
+    sell_signals = data_fn[data_fn['signal'] == -1]
+    fig.add_trace(go.Scatter(x=buy_signals.index, y=buy_signals['Close'],
+                             mode='markers', marker=dict(color='green', size=10),
+                             name='Buy'))
+    fig.add_trace(go.Scatter(x=sell_signals.index, y=sell_signals['Close'],
+                             mode='markers', marker=dict(color='red', size=10),
+                             name='Sell'))
+
     st.plotly_chart(fig)
+    st.subheader('cumulative returns:')
+    st.write(cumulative)
