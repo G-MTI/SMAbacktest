@@ -23,18 +23,26 @@ def signal(sma_data, start_input, fast_input):
                 # se facessi senza .diff() avrei solo un valore = e ! perche .astype(int) mi converte i valori booleani in interi
                 #calcolo giornalmente l'aumento percentuale del prezzo di chiusura ['Close'] rispetto al giorno precedente: .pct_change() = Fractional change between the current and a prior element. //documentazione su https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.pct_change.html
                 # moltiplico per il signal shiftato di 1 giorno perche l'operazione avviene il giorno dopo il segnale 1 o -1, (i segnali avvengono alla chiusura del mercato)
-    data_signal['entry'] = 0
-    data_signal['exit'] = 0
-    data_signal['position'] = 0  # 0 = no position, 1 = long position, -1 = short position
+                # 0 = no position, 1 = long position, -1 = short position
+    data_signal['entry'] = 0.0
+    data_signal['exit'] = 0.0
     return data_signal
 
 def cross_over(data_signal):
     data_fn = data_signal[data_signal.index != 'Ticker']
     for i in range(1, len(data_fn)):
         if data_fn['signal'].iloc[i] == 1:
-             # Long entry
-            data_fn.loc[data_fn.index[i], 'position'] = 1
-            data_fn.at[data_fn.index[i], 'entry'] = data_fn['Close'].iloc[i].astype(float)
-            print(f"Long entry at {data_fn.index[i]} price {data_fn['Close'].iloc[i]}")
+            price = data_fn['Close'].iloc[i+1]
+            data_fn.at[data_fn.index[i], 'entry'] = price
+            print(f"Long entry at {data_fn.index[i]} price {price}")
+        elif data_fn['signal'].iloc[i] == -1:
+            price = data_fn['Close'].iloc[i+1]
+            data_fn.at[data_fn.index[i], 'exit'] = price
+            print(f"Long exit at {data_fn.index[i]} price {price}")
 
+    return data_fn
+
+def returns(data_fn):
+    data_fn['returns'] = data_fn['Close'].pct_change() * data_fn['signal'].shift(1)
+    data_fn['cumulative_returns'] = (1 + data_fn['returns']).cumprod() - 1
     return data_fn

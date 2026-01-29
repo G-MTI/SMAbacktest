@@ -28,6 +28,4 @@ print(data_signal)
 data_fn = cross_over(data_signal)
 print(data_fn)
 
-print(data.head(3))
-print(data.index[:5])
 
