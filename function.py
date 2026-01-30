@@ -45,14 +45,25 @@ def cross_over(data_signal):
         prices.pop()
     if prices[0] < 0:
         prices.pop(0)
-    return data_fn, prices
+        
+    cleaned_prices = [] #devo pulire perché vengono estratti male da yfinance e non me ne ero accorta prima
+    for r in prices:
+        if isinstance(r, (pd.DataFrame, pd.Series)): # Se è un DataFrame o una Series, estrai i valori numerici
+            cleaned_prices.extend(r.values.flatten().tolist())
+        elif isinstance(r, (list, tuple, np.ndarray)): # Se è una lista, tupla o array
+            cleaned_prices.extend(list(r))
+        else:
+            cleaned_prices.append(r)  # Se è un numero 
+    return data_fn, cleaned_prices
 
-def returns_calculate(data_fn, prices):
+def returns_calculate (cleaned_prices):
     returns = []
-    for i in range (0, len(prices)-1):
-        returns.append(((prices[i] - prices[i+1]) / prices[i])-2)
-    return data_fn, returns 
+    for i in range (0, len(cleaned_prices)-1):
+        returns.append(((cleaned_prices[i] - cleaned_prices[i+1]) / cleaned_prices[i])-2)
+    return returns 
 
-def cumulative_results(returns):
-    cumulative = returns[0]
-    return cumulative
+
+def cumulative_returns(returns):
+    cleaned = returns #metto il primo valoe che returns è una tulpa dove il primo valore sono tutti i prezzi
+    cumulative_results = cleaned  # Assicurati che sia una lista piatta
+    return cumulative_results

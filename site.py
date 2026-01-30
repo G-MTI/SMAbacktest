@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from function import get_stock_data, sma_calculate, signal, cross_over, returns_calculate, cumulative_results
+from function import get_stock_data, sma_calculate, signal, cross_over, returns_calculate, cumulative_returns
 
 st.title("SMA Backtest Application")
 
@@ -26,13 +26,14 @@ if st.button("Esegui Backtest"):
     data_signal = signal(sma_data, start_input, fast_input)
 
 
-    data_fn, prices = cross_over(data_signal)
-    print("Prices:", prices)
+    data_fn, cleaned_prices = cross_over(data_signal)
+    print("Prices:", cleaned_prices)
 
-    returns = returns_calculate(data_fn, prices)
+    returns = returns_calculate( cleaned_prices)
     print("returns:", returns)
 
-    cumulative = cumulative_results(returns)
+    cumulative = cumulative_returns(returns)
+    print(cumulative)
 
     #Grafico con Plotly
     fig = go.Figure()
@@ -51,5 +52,5 @@ if st.button("Esegui Backtest"):
                              name='Sell'))
 
     st.plotly_chart(fig)
-    st.subheader('cumulative returns:')
-    st.write(cumulative)
+    st.subheader(f"SMA Backtest Results for {ticker_input}")
+    st.write('cumulative returns:', cumulative)
