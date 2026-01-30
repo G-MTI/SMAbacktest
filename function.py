@@ -64,6 +64,6 @@ def returns_calculate (cleaned_prices):
 
 
 def cumulative_returns(returns):
-    cleaned = returns #metto il primo valoe che returns è una tulpa dove il primo valore sono tutti i prezzi
-    cumulative_results = cleaned  # Assicurati che sia una lista piatta
+    cleaned = returns 
+    cumulative_results = cleaned
     return cumulative_results
