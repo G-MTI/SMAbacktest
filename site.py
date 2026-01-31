@@ -28,6 +28,8 @@ if st.button("Esegui Backtest"):
 
     data_fn, cleaned_prices = cross_over(data_signal)
     print("Prices:", cleaned_prices)
+    print("Data with signals:", data_fn)
+
 
     returns = returns_calculate( cleaned_prices)
     print("returns:", returns)
