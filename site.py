@@ -23,19 +23,18 @@ if st.button("Esegui Backtest"):
     pd.set_option('display.max_rows', None)
     print(sma_data)
 
-    data_signal = signal(sma_data, start_input, fast_input)
+    data_signal = signal(sma_data, start_input)
+    print(data_signal)
 
 
-    data_fn, cleaned_prices = cross_over(data_signal)
-    print("Prices:", cleaned_prices)
-    print("Data with signals:", data_fn)
+    data_fn, prices = cross_over(data_signal)
+    print(data_fn)
+    print("Prices:", prices)
 
-
-    returns = returns_calculate( cleaned_prices)
+    returns = returns_calculate(prices)
     print("returns:", returns)
 
-    cumulative = cumulative_returns(returns)
-    print(cumulative)
+    cum = cumulative_returns(returns)
 
     #Grafico con Plotly
     fig = go.Figure()
@@ -55,4 +54,4 @@ if st.button("Esegui Backtest"):
 
     st.plotly_chart(fig)
     st.subheader(f"SMA Backtest Results for {ticker_input}")
-    st.write('cumulative returns:', cumulative)
+    st.write('cumulative returns:', cum)

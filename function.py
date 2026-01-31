@@ -1,7 +1,6 @@
 
 import pandas as pd
 import yfinance as yf
-import numpy as np
 
 #start_date=start_input-200
 #end_date=end_input
@@ -17,7 +16,7 @@ def sma_calculate(data, slow_input, fast_input):
     sma_data['smaFast'] = sma_data['Close'].rolling(window=fast_input).mean()
     return sma_data 
 
-def signal(sma_data, start_input, fast_input):
+def signal(sma_data, start_input):
 
     data_signal = sma_data.copy().loc[start_input:] #loc "filtra" i dati, in questo caso parte dalla data start_input
     data_signal['signal'] = (data_signal['smaFast'] > data_signal['smaSlow']).astype(int).diff() #calocolo la differenza con .diff() tra il signal di un giorno e quelo del giorno precedente così capisco quando ci sono i crossover
@@ -50,9 +49,10 @@ def cross_over(data_signal):
 def returns_calculate(prices):
     returns = []
     for i in range (0, len(prices)-1):
-        returns.append(((prices[i] - prices[i+1]) / prices[i])-2)
+        if prices[i] > 0:
+            returns.append(((prices[i] + prices[i+1]) / -prices[i]))
     return returns 
 
 def cumulative_returns(returns):
-    cumulative = returns
-    return cumulative
+    cum = returns
+    return cum
