@@ -6,7 +6,7 @@ from function import get_stock_data, sma_calculate, signal, cross_over, returns_
 
 st.title("SMA Backtest Application")
 
-ticker_input = st.text_input("inrert a title:", "AAPL")
+ticker_input = st.text_input("Enter a title:", "AAPL")
 start_input = st.date_input("Start Date:", pd.to_datetime("2019-01-01"))
 start_sma = start_input - pd.Timedelta(300, unit='d') #il massimo per la media lunga è 200 giorni dato che 200 giorni reali non sono 200 di borsa quindi ne scarico 300 per avere margine 
 
@@ -19,7 +19,7 @@ data = get_stock_data(ticker_input, start_sma, end_input)
 print("Dati scaricati:", len(data))
 print(data)
 
-if st.button("Esegui Backtest"):
+if st.button("Run backtest"):
     sma_data = sma_calculate(data, slow_input, fast_input)
     pd.set_option('display.max_rows', None)
     print(sma_data)
