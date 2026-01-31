@@ -3,9 +3,6 @@ import pandas as pd
 import yfinance as yf
 import numpy as np
 
-#start_date=start_input-200
-#end_date=end_input
-
 def get_stock_data(ticker_input, start_sma, end_input):
     data = yf.download(tickers=ticker_input, start=start_sma, end=end_input)
     data.columns = data.columns.get_level_values(0)
@@ -53,6 +50,10 @@ def returns_calculate(prices):
         if prices[i] > 0:
             returns.append(((prices[i] + prices[i+1]) / -prices[i]))
     return returns 
+
+def average_return(returns):
+    average = sum(returns)/len(returns)*100
+    return round(average,3)
 
 def cumulative_returns(returns):
     for i in returns:

@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-from function import get_stock_data, sma_calculate, signal, cross_over, returns_calculate, cumulative_returns
+from function import get_stock_data, sma_calculate, signal, cross_over, returns_calculate, cumulative_returns, average_return
 
 st.title("SMA Backtest Application")
 
@@ -12,11 +12,11 @@ start_sma = start_input - pd.Timedelta(300, unit='d') #il massimo per la media l
 
 end_input = st.date_input("End date:", pd.to_datetime("2024-01-01"))
 
-slow_input = st.number_input("Slow SMA(max 200):", min_value=1, max_value=200, value=60)
-fast_input = st.number_input("Fast SMA(max200):", min_value=1, max_value=200, value=20)
+slow_input = st.number_input("Slow SMA(max 200:", min_value=1, max_value=200, value=60)
+fast_input = st.number_input("Fast SMA(max 200):", min_value=1, max_value=200, value=20)
 
 data = get_stock_data(ticker_input, start_sma, end_input)
-print("Dati scaricati:", len(data))
+print("dawnloaded data ", len(data))
 print(data)
 
 if st.button("Run backtest"):
@@ -35,12 +35,15 @@ if st.button("Run backtest"):
     returns = returns_calculate(prices)
     print("returns:", returns)
 
+    average = average_return(returns)
+
+
     cum_fn = cumulative_returns(returns)
     print(cum_fn)
 
+
     #Grafico con Plotly
     fig = go.Figure()
-
     fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['Close'], name='Close price'))
     fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaFast'], name=f'SMA {fast_input}'))
     fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaSlow'], name=f'SMA {slow_input}'))
@@ -55,5 +58,9 @@ if st.button("Run backtest"):
                              name='Sell'))
 
     st.plotly_chart(fig)
+
     st.subheader(f"SMA Backtest Results for {ticker_input}")
-    st.write('cumulative returns:', cum_fn,"%")
+    st.write('Total trade:', len(returns))
+    st.write('Cumulative returns:', cum_fn,"%")
+    st.write('Average return per trade:', average,"%")
+    
