@@ -1,6 +1,7 @@
 
 import pandas as pd
 import yfinance as yf
+import numpy as np
 
 #start_date=start_input-200
 #end_date=end_input
@@ -54,5 +55,8 @@ def returns_calculate(prices):
     return returns 
 
 def cumulative_returns(returns):
-    cum = returns
-    return cum
+    for i in returns:
+        cum = np.cumprod(1+i)
+        print(cum)
+    cum_fn = ((cum[0]-1) * 100)
+    return round (cum_fn, 3)

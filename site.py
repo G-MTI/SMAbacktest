@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
@@ -34,12 +35,13 @@ if st.button("Esegui Backtest"):
     returns = returns_calculate(prices)
     print("returns:", returns)
 
-    cum = cumulative_returns(returns)
+    cum_fn = cumulative_returns(returns)
+    print(cum_fn)
 
     #Grafico con Plotly
     fig = go.Figure()
 
-    fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['Close'], name='Close'))
+    fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['Close'], name='Close price'))
     fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaFast'], name=f'SMA {fast_input}'))
     fig.add_trace(go.Scatter(x=sma_data.index, y=sma_data['smaSlow'], name=f'SMA {slow_input}'))
 
@@ -54,4 +56,4 @@ if st.button("Esegui Backtest"):
 
     st.plotly_chart(fig)
     st.subheader(f"SMA Backtest Results for {ticker_input}")
-    st.write('cumulative returns:', cum)
+    st.write('cumulative returns:', cum_fn,"%")
