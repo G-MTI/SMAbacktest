@@ -6,14 +6,14 @@ from function import get_stock_data, sma_calculate, signal, cross_over, returns_
 
 st.title("SMA Backtest Application")
 
-ticker_input = st.text_input("Inserisci il ticker:", "AAPL")
-start_input = st.date_input("Data di inizio:", pd.to_datetime("2020-01-01"))
+ticker_input = st.text_input("inrert a title:", "AAPL")
+start_input = st.date_input("Start Date:", pd.to_datetime("2019-01-01"))
 start_sma = start_input - pd.Timedelta(300, unit='d') #il massimo per la media lunga è 200 giorni dato che 200 giorni reali non sono 200 di borsa quindi ne scarico 300 per avere margine 
 
-end_input = st.date_input("Data di fine:", pd.to_datetime("2021-01-01"))
+end_input = st.date_input("End date:", pd.to_datetime("2024-01-01"))
 
-slow_input = st.number_input("Periodo SMA Lenta:", min_value=1, max_value=200, value=60)
-fast_input = st.number_input("Periodo SMA Veloce:", min_value=1, max_value=200, value=20)
+slow_input = st.number_input("Slow SMA(max 200):", min_value=1, max_value=200, value=60)
+fast_input = st.number_input("Fast SMA(max200):", min_value=1, max_value=200, value=20)
 
 data = get_stock_data(ticker_input, start_sma, end_input)
 print("Dati scaricati:", len(data))
